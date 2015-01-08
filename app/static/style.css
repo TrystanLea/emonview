@@ -1,0 +1,247 @@
+:root {
+  --main-color: #0699fa;
+}
+
+html {
+    height:100%;
+    font-family: 'Ubuntu Light', sans-serif;
+    font-size: 18px;
+}
+
+body {
+    color:#333;
+    padding:0px;
+    margin:0px;
+    height:100%;
+}
+
+.block {
+    padding:30px;
+}
+
+h1 { 
+    ccolor: var(--main-color);
+}
+
+h3 { 
+    color: var(--main-color);
+    margin:0px;
+}
+
+hr {
+    color: var(--main-color);
+    border: 0; height: 1px;
+}
+
+a {
+    text-decoration: none;
+    color:#000;
+}
+
+a:hover {
+    text-decoration: none;
+    color: var(--main-color);
+}
+
+#left-pane {
+    position: fixed;
+    width:160px;
+    top:0px;
+    left:0px;
+    height:100%;
+    background-color:#eee;
+    /*border: 1px solid rgba(255,0,0,0.2);*/
+}
+
+#right-pane {
+    margin-left:160px;
+    height:100%;
+    background-color:#fff;
+}
+
+#right-pane2 {
+    margin-left:160px;
+    height:100%;
+    background-color:#fff;
+}
+
+.menu-item {
+    padding-bottom:10px;
+}
+
+.menu-heading {
+    font-weight:bold;
+    padding-top:10px;
+    padding-bottom:10px;
+}
+
+.menu-item-heading {
+    padding-top:20px;
+    padding-bottom:5px;
+    font-size:14px;
+    font-weight:bold;
+    color:#555;
+}
+
+.console-out {
+    padding:20px;
+}
+
+pre {
+    /* 
+    Absolute method:
+    */
+    
+    position:absolute;
+    top:80px;
+    left:190px;
+    bottom:30px;
+    right:30px;
+    
+    /*
+    Fixed height method:
+    
+    width:100%;
+    height:600px;
+    */
+    
+    margin:0px;
+    padding:0px;
+    font-size:16px;
+    color:#fff;
+    background-color:#300a24;
+    overflow: scroll;
+    overflow-x: hidden;
+    
+}
+
+.bound-config {
+    width:100%;
+    margin:0px;
+    padding:0px;
+}
+
+textarea {
+    width:100%;
+    margin:0px;
+    padding:20px;
+    height:1400px;
+    font-size: 14px;
+    
+}
+
+.boxsizingborder {
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
+
+.table {
+    width:98%;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+    border-spacing: 0px;
+}
+
+.table td {
+    padding: 15px;
+}
+
+.table th {
+    text-align:left;
+    padding: 15px;
+}
+
+ul {
+    margin:0px;
+    padding:0px;
+    list-style-type: none;
+}
+
+
+li {
+    border-bottom: 1px solid #DDD;
+}
+
+ul li a {
+    padding: 15px 30px;
+    display: block;
+    color:#888;
+    text-decoration: none;
+}
+
+ul li a:hover {
+    text-decoration: none;
+    color: #666;
+}
+
+.selected {
+    border-right: 3px solid var(--main-color);
+}
+
+li:nth-child(odd) {background: rgba(0,0,0,0.02);}
+
+
+.test {
+    background-color:rgb(250,250,250);
+    margin:0px;
+    padding:30px;
+}
+
+.test2 {
+    border-right: 1px solid rgba(0,0,0,0.2);
+    width:200px;
+    height:100%;
+    margin:0px;
+    padding:0px;
+    background-color:rgb(250,250,250);
+    float:left;
+}
+
+.margin-block {
+    border-right: 1px solid rgba(0,0,0,0.2);
+    width:200px;
+    height:100%;
+    margin:0px;
+    padding:0px;
+    background-color:rgb(250,250,250);
+    float:left;
+}
+
+.bound-variables {
+    margin-left:200px;
+    height:100%;
+}
+
+
+/*=================================*/
+
+  .myelectric-title {
+    font-weight:bold; 
+    font-size:22px; 
+    color:#aaa; 
+    padding-top:20px
+  }
+  
+  .myelectric-powervalue {
+    font-weight:bold; 
+    font-size:100px; 
+    color:#0699fa; 
+    padding-top:35px;
+  }
+  
+  .myelectric-kwhvalue {
+    font-weight:normal; 
+    font-size:22px; 
+    color:#0699fa; 
+    padding-top:35px;
+  }
+
+  .clickable {
+      color: #888;
+      cursor:pointer;
+  }
+  
+  .clickable:hover {
+      color: #666;
+  }

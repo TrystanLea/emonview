@@ -1,0 +1,76 @@
+
+
+
+
+
+
+
+
+	
+
+
+
+.build/uno/jeelib/PortsBMP085.d : lib/jeelib/PortsBMP085.cpp
+	@mkdir -p .build/uno/jeelib
+	@/usr/share/arduino/hardware/tools/avr/bin/avr-gcc -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=105 -I/usr/share/arduino/hardware/arduino/cores/arduino -ffunction-sections -fdata-sections -g -Os -w -I/usr/share/arduino/hardware/arduino/variants/standard -I/usr/share/arduino/hardware/arduino/cores/arduino -I/usr/share/arduino/hardware/arduino/cores/arduino/avr-libc -Ilib/jeelib -I/usr/share/arduino/libraries/GSM -I/usr/share/arduino/libraries/Robot_Control -I/usr/share/arduino/libraries/Robot_Control/utility -I/usr/share/arduino/libraries/WiFi -I/usr/share/arduino/libraries/WiFi/utility -I/usr/share/arduino/libraries/Stepper -I/usr/share/arduino/libraries/TFT -I/usr/share/arduino/libraries/TFT/utility -I/usr/share/arduino/libraries/Esplora -I/usr/share/arduino/libraries/SPI -I/usr/share/arduino/libraries/LiquidCrystal -I/usr/share/arduino/libraries/Wire -I/usr/share/arduino/libraries/Wire/utility -I/usr/share/arduino/libraries/SD -I/usr/share/arduino/libraries/SD/utility -I/usr/share/arduino/libraries/Robot_Motor -I/usr/share/arduino/libraries/Firmata -I/usr/share/arduino/libraries/EEPROM -I/usr/share/arduino/libraries/Servo -I/usr/share/arduino/libraries/Ethernet -I/usr/share/arduino/libraries/Ethernet/utility -I/usr/share/arduino/libraries/SoftwareSerial  -MM $^ > $@
+	
+	@printf ".build/uno/jeelib/PortsBMP085.d .build/uno/jeelib/" | cat - $@ > $@~ && mv $@~ $@
+
+.build/uno/jeelib/RF69_compat.d : lib/jeelib/RF69_compat.cpp
+	@mkdir -p .build/uno/jeelib
+	@/usr/share/arduino/hardware/tools/avr/bin/avr-gcc -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=105 -I/usr/share/arduino/hardware/arduino/cores/arduino -ffunction-sections -fdata-sections -g -Os -w -I/usr/share/arduino/hardware/arduino/variants/standard -I/usr/share/arduino/hardware/arduino/cores/arduino -I/usr/share/arduino/hardware/arduino/cores/arduino/avr-libc -Ilib/jeelib -I/usr/share/arduino/libraries/GSM -I/usr/share/arduino/libraries/Robot_Control -I/usr/share/arduino/libraries/Robot_Control/utility -I/usr/share/arduino/libraries/WiFi -I/usr/share/arduino/libraries/WiFi/utility -I/usr/share/arduino/libraries/Stepper -I/usr/share/arduino/libraries/TFT -I/usr/share/arduino/libraries/TFT/utility -I/usr/share/arduino/libraries/Esplora -I/usr/share/arduino/libraries/SPI -I/usr/share/arduino/libraries/LiquidCrystal -I/usr/share/arduino/libraries/Wire -I/usr/share/arduino/libraries/Wire/utility -I/usr/share/arduino/libraries/SD -I/usr/share/arduino/libraries/SD/utility -I/usr/share/arduino/libraries/Robot_Motor -I/usr/share/arduino/libraries/Firmata -I/usr/share/arduino/libraries/EEPROM -I/usr/share/arduino/libraries/Servo -I/usr/share/arduino/libraries/Ethernet -I/usr/share/arduino/libraries/Ethernet/utility -I/usr/share/arduino/libraries/SoftwareSerial  -MM $^ > $@
+	
+	@printf ".build/uno/jeelib/RF69_compat.d .build/uno/jeelib/" | cat - $@ > $@~ && mv $@~ $@
+
+.build/uno/jeelib/Ports.d : lib/jeelib/Ports.cpp
+	@mkdir -p .build/uno/jeelib
+	@/usr/share/arduino/hardware/tools/avr/bin/avr-gcc -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=105 -I/usr/share/arduino/hardware/arduino/cores/arduino -ffunction-sections -fdata-sections -g -Os -w -I/usr/share/arduino/hardware/arduino/variants/standard -I/usr/share/arduino/hardware/arduino/cores/arduino -I/usr/share/arduino/hardware/arduino/cores/arduino/avr-libc -Ilib/jeelib -I/usr/share/arduino/libraries/GSM -I/usr/share/arduino/libraries/Robot_Control -I/usr/share/arduino/libraries/Robot_Control/utility -I/usr/share/arduino/libraries/WiFi -I/usr/share/arduino/libraries/WiFi/utility -I/usr/share/arduino/libraries/Stepper -I/usr/share/arduino/libraries/TFT -I/usr/share/arduino/libraries/TFT/utility -I/usr/share/arduino/libraries/Esplora -I/usr/share/arduino/libraries/SPI -I/usr/share/arduino/libraries/LiquidCrystal -I/usr/share/arduino/libraries/Wire -I/usr/share/arduino/libraries/Wire/utility -I/usr/share/arduino/libraries/SD -I/usr/share/arduino/libraries/SD/utility -I/usr/share/arduino/libraries/Robot_Motor -I/usr/share/arduino/libraries/Firmata -I/usr/share/arduino/libraries/EEPROM -I/usr/share/arduino/libraries/Servo -I/usr/share/arduino/libraries/Ethernet -I/usr/share/arduino/libraries/Ethernet/utility -I/usr/share/arduino/libraries/SoftwareSerial  -MM $^ > $@
+	
+	@printf ".build/uno/jeelib/Ports.d .build/uno/jeelib/" | cat - $@ > $@~ && mv $@~ $@
+
+.build/uno/jeelib/RF12.d : lib/jeelib/RF12.cpp
+	@mkdir -p .build/uno/jeelib
+	@/usr/share/arduino/hardware/tools/avr/bin/avr-gcc -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=105 -I/usr/share/arduino/hardware/arduino/cores/arduino -ffunction-sections -fdata-sections -g -Os -w -I/usr/share/arduino/hardware/arduino/variants/standard -I/usr/share/arduino/hardware/arduino/cores/arduino -I/usr/share/arduino/hardware/arduino/cores/arduino/avr-libc -Ilib/jeelib -I/usr/share/arduino/libraries/GSM -I/usr/share/arduino/libraries/Robot_Control -I/usr/share/arduino/libraries/Robot_Control/utility -I/usr/share/arduino/libraries/WiFi -I/usr/share/arduino/libraries/WiFi/utility -I/usr/share/arduino/libraries/Stepper -I/usr/share/arduino/libraries/TFT -I/usr/share/arduino/libraries/TFT/utility -I/usr/share/arduino/libraries/Esplora -I/usr/share/arduino/libraries/SPI -I/usr/share/arduino/libraries/LiquidCrystal -I/usr/share/arduino/libraries/Wire -I/usr/share/arduino/libraries/Wire/utility -I/usr/share/arduino/libraries/SD -I/usr/share/arduino/libraries/SD/utility -I/usr/share/arduino/libraries/Robot_Motor -I/usr/share/arduino/libraries/Firmata -I/usr/share/arduino/libraries/EEPROM -I/usr/share/arduino/libraries/Servo -I/usr/share/arduino/libraries/Ethernet -I/usr/share/arduino/libraries/Ethernet/utility -I/usr/share/arduino/libraries/SoftwareSerial  -MM $^ > $@
+	
+	@printf ".build/uno/jeelib/RF12.d .build/uno/jeelib/" | cat - $@ > $@~ && mv $@~ $@
+
+.build/uno/jeelib/PortsLCD.d : lib/jeelib/PortsLCD.cpp
+	@mkdir -p .build/uno/jeelib
+	@/usr/share/arduino/hardware/tools/avr/bin/avr-gcc -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=105 -I/usr/share/arduino/hardware/arduino/cores/arduino -ffunction-sections -fdata-sections -g -Os -w -I/usr/share/arduino/hardware/arduino/variants/standard -I/usr/share/arduino/hardware/arduino/cores/arduino -I/usr/share/arduino/hardware/arduino/cores/arduino/avr-libc -Ilib/jeelib -I/usr/share/arduino/libraries/GSM -I/usr/share/arduino/libraries/Robot_Control -I/usr/share/arduino/libraries/Robot_Control/utility -I/usr/share/arduino/libraries/WiFi -I/usr/share/arduino/libraries/WiFi/utility -I/usr/share/arduino/libraries/Stepper -I/usr/share/arduino/libraries/TFT -I/usr/share/arduino/libraries/TFT/utility -I/usr/share/arduino/libraries/Esplora -I/usr/share/arduino/libraries/SPI -I/usr/share/arduino/libraries/LiquidCrystal -I/usr/share/arduino/libraries/Wire -I/usr/share/arduino/libraries/Wire/utility -I/usr/share/arduino/libraries/SD -I/usr/share/arduino/libraries/SD/utility -I/usr/share/arduino/libraries/Robot_Motor -I/usr/share/arduino/libraries/Firmata -I/usr/share/arduino/libraries/EEPROM -I/usr/share/arduino/libraries/Servo -I/usr/share/arduino/libraries/Ethernet -I/usr/share/arduino/libraries/Ethernet/utility -I/usr/share/arduino/libraries/SoftwareSerial  -MM $^ > $@
+	
+	@printf ".build/uno/jeelib/PortsLCD.d .build/uno/jeelib/" | cat - $@ > $@~ && mv $@~ $@
+
+.build/uno/jeelib/PortsRF12.d : lib/jeelib/PortsRF12.cpp
+	@mkdir -p .build/uno/jeelib
+	@/usr/share/arduino/hardware/tools/avr/bin/avr-gcc -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=105 -I/usr/share/arduino/hardware/arduino/cores/arduino -ffunction-sections -fdata-sections -g -Os -w -I/usr/share/arduino/hardware/arduino/variants/standard -I/usr/share/arduino/hardware/arduino/cores/arduino -I/usr/share/arduino/hardware/arduino/cores/arduino/avr-libc -Ilib/jeelib -I/usr/share/arduino/libraries/GSM -I/usr/share/arduino/libraries/Robot_Control -I/usr/share/arduino/libraries/Robot_Control/utility -I/usr/share/arduino/libraries/WiFi -I/usr/share/arduino/libraries/WiFi/utility -I/usr/share/arduino/libraries/Stepper -I/usr/share/arduino/libraries/TFT -I/usr/share/arduino/libraries/TFT/utility -I/usr/share/arduino/libraries/Esplora -I/usr/share/arduino/libraries/SPI -I/usr/share/arduino/libraries/LiquidCrystal -I/usr/share/arduino/libraries/Wire -I/usr/share/arduino/libraries/Wire/utility -I/usr/share/arduino/libraries/SD -I/usr/share/arduino/libraries/SD/utility -I/usr/share/arduino/libraries/Robot_Motor -I/usr/share/arduino/libraries/Firmata -I/usr/share/arduino/libraries/EEPROM -I/usr/share/arduino/libraries/Servo -I/usr/share/arduino/libraries/Ethernet -I/usr/share/arduino/libraries/Ethernet/utility -I/usr/share/arduino/libraries/SoftwareSerial  -MM $^ > $@
+	
+	@printf ".build/uno/jeelib/PortsRF12.d .build/uno/jeelib/" | cat - $@ > $@~ && mv $@~ $@
+
+.build/uno/jeelib/RF12sio.d : lib/jeelib/RF12sio.cpp
+	@mkdir -p .build/uno/jeelib
+	@/usr/share/arduino/hardware/tools/avr/bin/avr-gcc -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=105 -I/usr/share/arduino/hardware/arduino/cores/arduino -ffunction-sections -fdata-sections -g -Os -w -I/usr/share/arduino/hardware/arduino/variants/standard -I/usr/share/arduino/hardware/arduino/cores/arduino -I/usr/share/arduino/hardware/arduino/cores/arduino/avr-libc -Ilib/jeelib -I/usr/share/arduino/libraries/GSM -I/usr/share/arduino/libraries/Robot_Control -I/usr/share/arduino/libraries/Robot_Control/utility -I/usr/share/arduino/libraries/WiFi -I/usr/share/arduino/libraries/WiFi/utility -I/usr/share/arduino/libraries/Stepper -I/usr/share/arduino/libraries/TFT -I/usr/share/arduino/libraries/TFT/utility -I/usr/share/arduino/libraries/Esplora -I/usr/share/arduino/libraries/SPI -I/usr/share/arduino/libraries/LiquidCrystal -I/usr/share/arduino/libraries/Wire -I/usr/share/arduino/libraries/Wire/utility -I/usr/share/arduino/libraries/SD -I/usr/share/arduino/libraries/SD/utility -I/usr/share/arduino/libraries/Robot_Motor -I/usr/share/arduino/libraries/Firmata -I/usr/share/arduino/libraries/EEPROM -I/usr/share/arduino/libraries/Servo -I/usr/share/arduino/libraries/Ethernet -I/usr/share/arduino/libraries/Ethernet/utility -I/usr/share/arduino/libraries/SoftwareSerial  -MM $^ > $@
+	
+	@printf ".build/uno/jeelib/RF12sio.d .build/uno/jeelib/" | cat - $@ > $@~ && mv $@~ $@
+
+.build/uno/jeelib/PortsSHT11.d : lib/jeelib/PortsSHT11.cpp
+	@mkdir -p .build/uno/jeelib
+	@/usr/share/arduino/hardware/tools/avr/bin/avr-gcc -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=105 -I/usr/share/arduino/hardware/arduino/cores/arduino -ffunction-sections -fdata-sections -g -Os -w -I/usr/share/arduino/hardware/arduino/variants/standard -I/usr/share/arduino/hardware/arduino/cores/arduino -I/usr/share/arduino/hardware/arduino/cores/arduino/avr-libc -Ilib/jeelib -I/usr/share/arduino/libraries/GSM -I/usr/share/arduino/libraries/Robot_Control -I/usr/share/arduino/libraries/Robot_Control/utility -I/usr/share/arduino/libraries/WiFi -I/usr/share/arduino/libraries/WiFi/utility -I/usr/share/arduino/libraries/Stepper -I/usr/share/arduino/libraries/TFT -I/usr/share/arduino/libraries/TFT/utility -I/usr/share/arduino/libraries/Esplora -I/usr/share/arduino/libraries/SPI -I/usr/share/arduino/libraries/LiquidCrystal -I/usr/share/arduino/libraries/Wire -I/usr/share/arduino/libraries/Wire/utility -I/usr/share/arduino/libraries/SD -I/usr/share/arduino/libraries/SD/utility -I/usr/share/arduino/libraries/Robot_Motor -I/usr/share/arduino/libraries/Firmata -I/usr/share/arduino/libraries/EEPROM -I/usr/share/arduino/libraries/Servo -I/usr/share/arduino/libraries/Ethernet -I/usr/share/arduino/libraries/Ethernet/utility -I/usr/share/arduino/libraries/SoftwareSerial  -MM $^ > $@
+	
+	@printf ".build/uno/jeelib/PortsSHT11.d .build/uno/jeelib/" | cat - $@ > $@~ && mv $@~ $@
+
+.build/uno/jeelib/RF69.d : lib/jeelib/RF69.cpp
+	@mkdir -p .build/uno/jeelib
+	@/usr/share/arduino/hardware/tools/avr/bin/avr-gcc -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=105 -I/usr/share/arduino/hardware/arduino/cores/arduino -ffunction-sections -fdata-sections -g -Os -w -I/usr/share/arduino/hardware/arduino/variants/standard -I/usr/share/arduino/hardware/arduino/cores/arduino -I/usr/share/arduino/hardware/arduino/cores/arduino/avr-libc -Ilib/jeelib -I/usr/share/arduino/libraries/GSM -I/usr/share/arduino/libraries/Robot_Control -I/usr/share/arduino/libraries/Robot_Control/utility -I/usr/share/arduino/libraries/WiFi -I/usr/share/arduino/libraries/WiFi/utility -I/usr/share/arduino/libraries/Stepper -I/usr/share/arduino/libraries/TFT -I/usr/share/arduino/libraries/TFT/utility -I/usr/share/arduino/libraries/Esplora -I/usr/share/arduino/libraries/SPI -I/usr/share/arduino/libraries/LiquidCrystal -I/usr/share/arduino/libraries/Wire -I/usr/share/arduino/libraries/Wire/utility -I/usr/share/arduino/libraries/SD -I/usr/share/arduino/libraries/SD/utility -I/usr/share/arduino/libraries/Robot_Motor -I/usr/share/arduino/libraries/Firmata -I/usr/share/arduino/libraries/EEPROM -I/usr/share/arduino/libraries/Servo -I/usr/share/arduino/libraries/Ethernet -I/usr/share/arduino/libraries/Ethernet/utility -I/usr/share/arduino/libraries/SoftwareSerial  -MM $^ > $@
+	
+	@printf ".build/uno/jeelib/RF69.d .build/uno/jeelib/" | cat - $@ > $@~ && mv $@~ $@
+
+
+
+.build/uno/jeelib/dependencies.d : .build/uno/jeelib/PortsBMP085.d .build/uno/jeelib/RF69_compat.d .build/uno/jeelib/Ports.d .build/uno/jeelib/RF12.d .build/uno/jeelib/PortsLCD.d .build/uno/jeelib/PortsRF12.d .build/uno/jeelib/RF12sio.d .build/uno/jeelib/PortsSHT11.d .build/uno/jeelib/RF69.d
+	@echo [96mScanning dependencies of jeelib[0m
+	@mkdir -p .build/uno/jeelib
+	@cat $^ > $@;
+
+all : .build/uno/jeelib/dependencies.d
+	@true
+
