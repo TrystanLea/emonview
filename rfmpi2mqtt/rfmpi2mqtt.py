@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 import mosquitto, time, serial
 from configobj import ConfigObj
@@ -7,11 +7,11 @@ import struct
 import redis
 import json
 
-settings = ConfigObj("rfmpi2mqtt.conf", file_error=True)
+settings = ConfigObj("/home/pi/emonview/rfmpi2mqtt/rfmpi2mqtt.conf", file_error=True)
 ehc.nodelist = settings['nodes']
 ehc.defaultdatacode = settings['defaultdatacode']
 
-ser = serial.Serial("/dev/ttyUSB0", 9600)
+ser = serial.Serial("/dev/ttyAMA0", 9600)
 
 r = redis.Redis(host='localhost', port=6379, db=0)
 
