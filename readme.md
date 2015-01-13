@@ -59,6 +59,20 @@ navigate to the pi's ip address and add the port number to the end, i.e:
     
 this should present you with a login
 
+## Using services:
+
+Install rfmpi2mqtt service: 
+
+    sudo cp /home/pi/emonview/rfmpi2mqtt/rfmpi2mqtt /etc/init.d/
+    sudo chmod 755 /etc/init.d/rfmpi2mqtt
+    sudo update-rc.d rfmpi2mqtt defaults
+    
+Install emonview service: 
+
+    sudo cp /home/pi/emonview/app/emonview /etc/init.d/
+    sudo chmod 755 /etc/init.d/emonview
+    sudo update-rc.d emonview defaults
+
 # Login
 
 Username: demo, password: demo
