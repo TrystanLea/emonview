@@ -37,6 +37,8 @@ class MQTT_Thread(Thread):
         while not self.stop and mqttc.loop() == 0:
             pass
             
+        sys.exit(0)
+            
         #print "MQTT Thread Closed"
 # ==================================================
 
@@ -83,35 +85,33 @@ def conf():
             content = f.read()
         return Response(content, mimetype='text/plain')
 
-@app.route('/emonhub/start',methods = ['POST'])
-def emonhub_start():
+@app.route('/service/<path:path>',methods = ['POST'])
+def service(path):
     if not session['valid']:
         redirect("/")
-    subprocess.call('sudo service emonhub start', shell=True)
-    return "started"
+        
+    parts = path.split("/")
+    service = parts[0]
+    action = parts[1]
     
-@app.route('/emonhub/stop',methods = ['POST'])
-def emonhub_stop():
-    if not session['valid']:
-        redirect("/")
-    subprocess.call('sudo service emonhub stop', shell=True)
-    return "stopped"
+    if not action=="status":
+        cmd = 'sudo service '+service+' '+action
+        proc = subprocess.Popen(cmd, shell=True,stdout=subprocess.PIPE)
+        output = proc.stdout.read()
+        socketio.emit('my response',{'topic':'service-log','payload':service+"/"+action},namespace='/test') 
     
-@app.route('/emonhub/restart',methods = ['POST'])
-def emonhub_restart():
-    if not session['valid']:
-        redirect("/")
-    subprocess.call('sudo service emonhub restart', shell=True)
-    return "restarted"
+    cmd = 'sudo service '+service+' status'    
+    proc = subprocess.Popen(cmd, shell=True,stdout=subprocess.PIPE)
+    output = proc.stdout.read() 
+
+    status = "stopped"
+    if "is running" in output:
+        status = "running" 
+
+    socketio.emit('my response',{'topic':'service-log','payload':service+"/"+status},namespace='/test') 
+   
+    return cmd
     
-@app.route('/emonhub/status',methods = ['POST'])
-def emonhub_status():
-    if not session['valid']:
-        redirect("/")
-    proc = subprocess.Popen('sudo service emonhub status', shell=True,stdout=subprocess.PIPE)
-    output = proc.stdout.read()
-    socketio.emit('my response',{'topic':'log','payload':output},namespace='/test') 
-    return "restarted"
     
 @app.route('/api/<path:path>',methods = ['GET'])
 def api(path):

@@ -86,11 +86,37 @@
             <div class="view" name="services" style="display:none">
                 <div class="block">
                     <h3>Services</h3>
+                    
                     <br>
-                    <button id="start-emonhub">Start emonhub</button>
-                    <button id="stop-emonhub">Stop emonhub</button>
-                    <button id="restart-emonhub">Restart emonhub</button>   
-                    <button id="status-emonhub">Status</button>
+                    
+                    <table class="table">
+                    <tr>
+                    <th>Service name</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                    </tr>
+                    <tr>
+                    <td>emonview</td>
+                    <td class="service-status" service="emonview">?</td>
+                        <td service="emonview">
+                            <button class="service-action" action="start">start</button>
+                            <button class="service-action" action="stop">stop</button>
+                            <button class="service-action" action="restart">restart</button>
+                            <button class="service-action" action="status">status</button>
+                        </td>
+                    </tr>
+                    <tr>
+                    <td>rfmpi2mqtt</td>
+                    <td class="service-status" service="rfmpi2mqtt">?</td>
+                       <td service="rfmpi2mqtt">
+                            <button class="service-action" action="start">start</button>
+                            <button class="service-action" action="stop">stop</button>
+                            <button class="service-action" action="restart">restart</button>
+                            <button class="service-action" action="status">status</button>
+                        </td>
+                    </tr>
+                    </table>
+                    
                 </div>
             </div>
             
@@ -159,6 +185,12 @@
             
             if (msg.topic=="log") {
                 $('.console-out').append(msg.payload+"\n");
+            } else if (msg.topic=="service-log") {
+                var parts = msg.payload.split("/");
+                var service = parts[0];
+                var status = parts[1];
+                console.log(msg.payload);
+                $('.service-status[service="'+service+'"]').html(status);
             } else {
                 $('.console-out').append(msg.topic+" "+msg.payload+"\n");
                 var key = msg.topic; //.replace(/\//g,".");
@@ -195,20 +227,10 @@
             $.ajax({ type:'POST', url: "conf", contentType: "text/plain", data: $("#emonhubconf").val() });
         });
         
-        $("#start-emonhub").click(function(){
-            $.ajax({ type:'POST', url: "emonhub/start"});
-        });
-        
-        $("#stop-emonhub").click(function(){
-            $.ajax({ type:'POST', url: "emonhub/stop"});
-        });
-        
-        $("#restart-emonhub").click(function(){
-            $.ajax({ type:'POST', url: "emonhub/restart"});
-        });
-
-        $("#status-emonhub").click(function(){
-            $.ajax({ type:'POST', url: "emonhub/status"});
+        $(".service-action").click(function(){
+            var service = $(this).parent().attr("service");
+            var action = $(this).attr("action");
+            $.ajax({ type:'POST', url: "service/"+service+"/"+action});
         });
         
         $(window).on('hashchange', function() {
