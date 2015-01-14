@@ -48,6 +48,7 @@ Code is based on the flask-socketio example
 # Run 
 
     python emonview/app/app.py
+    python emonview/rfmpi2mqtt.py
 
 if installing on ready to go SD card image ufw firewall is installed blocking on port 8000, you can enable port 8000 with:
 
@@ -59,19 +60,22 @@ navigate to the pi's ip address and add the port number to the end, i.e:
     
 this should present you with a login
 
-## Using services:
+## Run using services:
 
 Install rfmpi2mqtt service: 
 
     sudo cp /home/pi/emonview/rfmpi2mqtt/rfmpi2mqtt /etc/init.d/
     sudo chmod 755 /etc/init.d/rfmpi2mqtt
     sudo update-rc.d rfmpi2mqtt defaults
+    sudo chmod 755 /home/pi/emonview/rfmpi2mqtt/rfmpi2mqtt.py
     
 Install emonview service: 
 
     sudo cp /home/pi/emonview/app/emonview /etc/init.d/
     sudo chmod 755 /etc/init.d/emonview
     sudo update-rc.d emonview defaults
+    sudo chmod 755 /home/pi/emonview/app/app.py
+    
 
 # Login
 
