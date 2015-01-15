@@ -7,49 +7,28 @@ import time
 from threading import Thread
 from flask import Flask, render_template, session, request, redirect, Response
 from flask.ext.socketio import SocketIO, emit
-import mosquitto
 import os
-import subprocess
-import signal
 import sys
+import signal
+import mosquitto
 import json
+import subprocess
+from configobj import ConfigObj
 
 from pyfina import pyfina
+pyfina = pyfina("data/")
 
 app = Flask(__name__)
 app.debug = True
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 mqtt_thread = None
-username="demo"
-password="demo"
-conffile="/etc/emonhub/emonhub.conf"
 
-pyfina = pyfina("data/")
+conffile="/home/trystan/Desktop/pi/emonview/emonview.conf"
+settings = ConfigObj(conffile, file_error=True)
+username = settings["emonview"]["username"]
+password = settings["emonview"]["password"]
 
-## =================================================
-class MQTT_Thread(Thread):
-    def __init__(self):
-        Thread.__init__(self)
-        self.stop = False
-        
-    def run(self):
-        while not self.stop and mqttc.loop() == 0:
-            pass
-            
-        sys.exit(0)
-            
-        #print "MQTT Thread Closed"
-# ==================================================
-
-def signal_handler(signal, frame):
-    mqtt_thread.stop = True
-    #print('==== Ctrl+C EXIT ====')
-    sys.exit(0)
-
-def on_message(mosq, obj, msg):
-    socketio.emit('my response',{'topic':msg.topic,'payload':msg.payload},namespace='/test') 
-    
 @app.route('/')
 def index():
     session['valid'] = session.get('valid',0)
@@ -69,22 +48,68 @@ def login():
 def logout():
     session.clear()
     return redirect("/")
-    
+
+# =====================================================
+# LOAD AND SAVE CONFIGURATION FILE:
+# =====================================================
 @app.route('/conf',methods = ['POST','GET'])
 def conf():
     if not session['valid']:
         redirect("/")
-        
+    
+    # Save config to file:
     if request.method == 'POST':
-        # might be good to do some input checking/sanitization here!
         with open(conffile,'w') as f:
             f.write(request.data)
+        settings.reload()
         return "ok"
-    else:
+    
+    # Load config from file:
+    if request.method == 'GET':
         with open(conffile, 'rb') as f:
             content = f.read()
         return Response(content, mimetype='text/plain')
 
+# =====================================================
+# DATA STORE:
+# =====================================================  
+@app.route('/data/<path:path>',methods = ['GET'])
+def data(path):
+    if not session['valid']:
+        redirect("/")
+    
+    filename = path.replace("/",".")
+    
+    
+    start = request.args.get('start')
+    end = request.args.get('end')
+    interval = request.args.get('interval')
+    
+    print "DATA: "+filename+" "+start+" "+end+" "+interval
+    
+    data = json.dumps(pyfina.data(filename,start,end,interval))
+    return Response(data, mimetype='text/plain')
+
+# =====================================================
+# API:
+# =====================================================
+@app.route('/api/<path:path>',methods = ['POST','GET'])
+def api(path):
+    if not session['valid']:
+        redirect("/")
+        
+    if request.method == 'POST':
+        print path+" "+request.data
+    
+    if request.method == 'GET':
+        if path=="nodes":
+            return Response(json.dumps(settings['nodes']), mimetype='text/plain')
+        
+    return 'You want path: %s' % path
+
+# =====================================================
+# SERVICE:
+# =====================================================
 @app.route('/service/<path:path>',methods = ['POST'])
 def service(path):
     if not session['valid']:
@@ -111,28 +136,34 @@ def service(path):
     socketio.emit('my response',{'topic':'service-log','payload':service+"/"+status},namespace='/test') 
    
     return cmd
+        
+# =====================================================
+# MQTT:
+# =====================================================
+class MQTT_Thread(Thread):
+    def __init__(self):
+        Thread.__init__(self)
+        self.stop = False
+        
+    def run(self):
+        while not self.stop and mqttc.loop() == 0:
+            pass  
+        sys.exit(0)
+        
+# =====================================================
+# MQTT -> SOCKET IO DIRECT LINK
+# =====================================================
+def on_message(mosq, obj, msg):
+    socketio.emit('my response',{'topic':msg.topic,'payload':msg.payload},namespace='/test') 
     
-    
-@app.route('/api/<path:path>',methods = ['GET'])
-def api(path):
-    if not session['valid']:
-        redirect("/")
-    print path
-    return 'You want path: %s' % path
-    
-@app.route('/data/<path:path>',methods = ['GET'])
-def data(path):
-    if not session['valid']:
-        redirect("/")
-    
-    filename = path.replace("/",".")
-    start = request.args.get('start')
-    end = request.args.get('end')
-    interval = request.args.get('interval')
-    
-    data = json.dumps(pyfina.data(filename,start,end,interval))
-    return Response(data, mimetype='text/plain')
+    # use rx topic to populate nodes object with last values (used in loading the initial view)
+    if msg.topic=="rx":
+        node = json.loads(msg.payload)    
+        settings["nodes"][node["nodeid"]]["Rx"]["values"] = node["values"]
 
+# =====================================================
+# SOCKET IO
+# =====================================================
 @socketio.on('my event', namespace='/test')
 def test_message(message):
     pass
@@ -143,17 +174,24 @@ def test_connect():
 
 @socketio.on('disconnect', namespace='/test')
 def test_disconnect():
-    pass 
+    pass
 
-  
+    
+def signal_handler(signal, frame):
+    mqtt_thread.stop = True
+    #print('==== Ctrl+C EXIT ====')
+    sys.exit(0)
 
-
+# =====================================================
+# MAIN
+# =====================================================
 # Start MQTT (Mosquitto)
 mqttc = mosquitto.Mosquitto()
 mqttc.on_message = on_message
 mqttc.connect("127.0.0.1",1883, 60, True)
 mqttc.subscribe("log", 0)
 mqttc.subscribe("rx/#", 0)
+mqttc.subscribe("rx", 0)
 
 signal.signal(signal.SIGINT, signal_handler)
 

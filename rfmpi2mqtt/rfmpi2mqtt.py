@@ -7,7 +7,7 @@ import struct
 import redis
 import json
 
-settings = ConfigObj("/home/pi/emonview/rfmpi2mqtt/rfmpi2mqtt.conf", file_error=True)
+settings = ConfigObj("/home/pi/emonview/emonview.conf", file_error=True)
 ehc.nodelist = settings['nodes']
 ehc.defaultdatacode = settings['defaultdatacode']
 
@@ -24,6 +24,8 @@ def on_message(mosq, obj, msg):
 
     topic_parts = msg.topic.split("/")
     
+    log("TX -> "+msg.topic+" "+msg.payload)
+    
     if topic_parts[0]=="tx":
     
         for nodeid in ehc.nodelist:
@@ -33,7 +35,7 @@ def on_message(mosq, obj, msg):
                 vararray = msg.payload.split(",")
                 
                 x=0
-                for code in ehc.nodelist[nodeid]["codes"]:
+                for code in ehc.nodelist[nodeid]['Tx']["codes"]:
                     tmp = struct.pack(code,int(vararray[x])) # fix, add parse float if float
                     for i in range(len(tmp)):
                         bytedata.append(struct.unpack('B', tmp[i])[0])
@@ -60,12 +62,13 @@ def on_readline(line):
             nodevars = {}
             
             for i in range(len(decoded)):
-                varname = ehc.nodelist[nodeid]['names'][i]
+                varname = ehc.nodelist[nodeid]['Rx']['names'][i]
                 nodevars[varname] = decoded[i]
                 log("  rx/"+nodename+"/"+varname+"/value "+str(decoded[i]))
                 mqttc.publish("rx/"+nodename+"/"+varname+"/value",decoded[i],retain=True)
                 r.set("rx/%s/%s" % (nodename, varname),decoded[i])
             
+            mqttc.publish("rx",json.dumps({"nodeid":nodeid, "values":decoded}))
             # mqttc.publish("rx/"+nodename,json.dumps(nodevars),retain=True)
             # r.set("rx/%s" % (nodename),json.dumps(nodevars))
             # log("  rx/"+nodename+" "+json.dumps(nodevars))

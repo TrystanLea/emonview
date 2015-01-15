@@ -10,7 +10,8 @@
         
         <script type="text/javascript" src="static/jquery-1.9.0.min.js"></script>
         <script type="text/javascript" src="static/socket.io.min.js"></script>
-        <script type="text/javascript" src="static/graph.js"></script>
+        <script type="text/javascript" src="static/emonview.js"></script>
+        <script type="text/javascript" src="static/nodes.js"></script>
         
         <script type="text/javascript" src="static/flot/jquery.flot.min.js"></script>
         <script type="text/javascript" src="static/flot/jquery.flot.time.min.js"></script>
@@ -32,6 +33,7 @@
                 <div class="menu">
                     <div class="menu-item-heading">My Apps</div>
                     <div class="menu-item"><a href="#myelectric">My Electric</a></div>
+                    <div class="menu-item"><a href="#myheating">My Heating</a></div>
                 </div>
             </div>
         </div>
@@ -115,6 +117,16 @@
                             <button class="service-action" action="status">status</button>
                         </td>
                     </tr>
+                    <tr>
+                    <td>writer</td>
+                    <td class="service-status" service="writer">?</td>
+                       <td service="writer">
+                            <button class="service-action" action="start">start</button>
+                            <button class="service-action" action="stop">stop</button>
+                            <button class="service-action" action="restart">restart</button>
+                            <button class="service-action" action="status">status</button>
+                        </td>
+                    </tr>
                     </table>
                     
                 </div>
@@ -129,6 +141,18 @@
                 </div>
             </div>
             
+            <div class="view" name="myheating" style="display:none">
+                <div class="block">
+                    <h3>My heating</h3>
+                    <p>
+                        <button class="myheating" action="on">on</button>
+                        <button class="myheating" action="off">off</button>
+                        SET POINT: <input type="text" />
+                        <button class="myheating" action="setpoint">set</button>
+                    </p>
+                </div>
+            </div>
+            
         </div>
         
     </body>
@@ -137,195 +161,109 @@
 
 <script type="text/javascript" charset="utf-8">
 
-    var appstart = (new Date()).getTime();
-    var viskey = "";
-    var loadedhistoric = "";
+var appstart = (new Date()).getTime();
 
-    graph.width = 600;
-    graph.height = 400;
-    
-    var options = {
-        lines: { show:true, fill: false },
-        points: { show:false},
-        xaxis: { mode: "time", timezone: "browser", minTickSize: [1, "second"]}, // 
-        // yaxis: { min: 0 },
-        grid: {hoverable: true, clickable: true},
-        selection: { mode: "x" }
-    };
+$(document).ready(function(){
 
-    var view = "console";
-    var rxkeys = {
-        "rx/LabEmonTx/MessageNumber/value":0,
-        "rx/LabEmonTx/PowerCT1/value":0
     
-    };
-    var nodes = {};
-    var data = {};
-    var graphdata = [];
+    var view = ["console"];
+    view = (window.location.hash).substring(1).split("/");
     
-    for (key in rxkeys) set_key(key,rxkeys[key]);
-    
-    $(document).ready(function(){
-        view = (window.location.hash).substring(1);
+    var nodes = {};    
+    load_nodes();
+    show_view();
+        
+    $.ajax({ url: "conf", cache: false, success: function(data){
+        $("#emonhubconf").val(data);
+    }});
+        
+    $("#saveconf").click(function(){
+        $.ajax({ type:'POST', url: "conf", contentType: "text/plain", data: $("#emonhubconf").val() });
+        load_nodes();
+    });
+               
+    $(window).on('hashchange', function() {
+        view = (window.location.hash).substring(1).split("/");
         show_view();
-        
-        namespace = '/test'; // change to an empty string to use the global namespace
-
-        // the socket.io documentation recommends sending an explicit package upon connection
-        // this is specially important when using the global namespace
-        var socket = io.connect('http://' + document.domain + ':' + location.port + namespace);
-        socket.on('connect', function() {
-            socket.emit('my event', {data: 'I\'m connected!'});
-        });
-
-        // event handler for server sent data
-        // the data is displayed in the "Received" section of the page
-        socket.on('my response', function(msg) {
-        
-            
-            if (msg.topic=="log") {
-                $('.console-out').append(msg.payload+"\n");
-            } else if (msg.topic=="service-log") {
-                var parts = msg.payload.split("/");
-                var service = parts[0];
-                var status = parts[1];
-                console.log(msg.payload);
-                $('.service-status[service="'+service+'"]').html(status);
-            } else {
-                $('.console-out').append(msg.topic+" "+msg.payload+"\n");
-                var key = msg.topic; //.replace(/\//g,".");
-                var value = msg.payload;
-                set_key(key,value);
-                
-                if (data[key]==undefined) {
-                    data[key] = [];
-                } else {
-                    var time = parseInt((new Date()).getTime());
-                    data[key].push([time,value*1]);
-                }
-                
-                if (key==viskey) {
-                    //graph.draw("graph",[data[key]]);
-                    plot();
-                }
-                
-            }
-            
-            var h = parseInt($('#log')[0].scrollHeight);
-            $('#log').scrollTop(h);
-        });
-        
-        
-        
-        // socket.emit('my event', {data: $('#emit_data').val()});
-        
-        $.ajax({ url: "conf", cache: false, success: function(data){
-            $("#emonhubconf").val(data);
-        }});
-        
-        $("#saveconf").click(function(){
-            $.ajax({ type:'POST', url: "conf", contentType: "text/plain", data: $("#emonhubconf").val() });
-        });
-        
-        $(".service-action").click(function(){
-            var service = $(this).parent().attr("service");
-            var action = $(this).attr("action");
-            $.ajax({ type:'POST', url: "service/"+service+"/"+action});
-        });
-        
-        $(window).on('hashchange', function() {
-            view = (window.location.hash).substring(1);
-            show_view();
-        });
-        
-        
-        $("body").on("click",".vis",function(){
-            viskey = $(this).attr('viskey');
-            console.log(viskey);
-            plot();
-            history_graph(viskey)
-        });
-        
     });
     
     function show_view(){
         $(".view").hide();
+        $(".view[name="+view[0]+"]").show();
         
-        if (view.indexOf("nodes/")==0){
-            $(".view[name=nodes]").show();
-            var parts = view.split("/");
-            var nodename = parts[1];
-            $("#variable-table tbody").hide();
-            $("[node="+nodename+"]").show();
-            $('li').removeClass("selected");
-            $('a[href="#nodes/'+nodename+'"]').parent().addClass("selected");
+        if (view[0]=="nodes"){
+            var nodename = view[1];
+            show_node(nodename);
             
-            if (parts[2]!=undefined){
-                var varname = parts[2];
+            if (view[2]!=undefined){
+                var varname = view[2];
                 viskey = "rx/"+nodename+"/"+varname+"/value";
                 plot();
             }
+        }
+    }
+
+    $(".service-action").click(function(){
+        var service = $(this).parent().attr("service");
+        var action = $(this).attr("action");
+        $.ajax({ type:'POST', url: "service/"+service+"/"+action});
+    });
+
+    $("body").on("click",".vis",function(){
+        viskey = $(this).attr('viskey');
+        plot();
+        history_graph(viskey);
+    });
+    
+    $(".myheating").click(function(){
+        var action = $(this).attr("action");
+        if (action=="on") myheating_state = 1;
+        if (action=="off") myheating_state = 0;
+        if (action=="setpoint") myheating_setpoint = $("#myheating-setpoint").val();
+        
+        save("tx/heating",myheating_state+","+parseInt(myheating_setpoint*100));
+    });
+
+    //===================================================================================
+    // SOCKET IO 
+    //===================================================================================
+    namespace = '/test'; // change to an empty string to use the global namespace
+    // the socket.io documentation recommends sending an explicit package upon connection
+    // this is specially important when using the global namespace
+    var socket = io.connect('http://' + document.domain + ':' + location.port + namespace);
+    socket.on('connect', function() {
+        socket.emit('my event', {data: 'I\'m connected!'})
+    });
+    // event handler for server sent data
+    // the data is displayed in the "Received" section of the page
+    socket.on('my response', function(msg) {
+        if (msg.topic=="log") {
+            $('.console-out').append(msg.payload+"\n");
+        } else if (msg.topic=="service-log") {
+            var parts = msg.payload.split("/");
+            var service = parts[0];
+            var status = parts[1];
+            $('.service-status[service="'+service+'"]').html(status);
         } else {
-            $(".view[name="+view+"]").show();
-        }
-    }
-    
-    function set_key(key,value)
-    {
-        var keyparts = key.split("/");
-        var nodename = keyparts[1]; var varname = keyparts[2];
-        
-        if (nodes[nodename]==undefined) {
-            nodes[nodename] = [];
+            $('.console-out').append(msg.topic+" "+msg.payload+"\n");
+            var key = msg.topic;
+            var value = msg.payload;
+            $('[key="'+key+'"]').html(value);
             
-            $("#nodelist").append('<li><a href="#nodes/'+nodename+'">'+nodename+'</a></li>');
-            $("#variable-table").append("<tbody node='"+nodename+"' style='display:none'></tbody>");
-        }
-        
-        if (nodes[nodename].indexOf(varname)==-1) {
-            nodes[nodename].push(varname);  
-            
-            var valuekey = "rx/"+nodename+"/"+varname+"/value";
-            var unitskey = "rx/"+nodename+"/"+varname+"/units";
-            var out = "<tr class='vis clickable' viskey='"+valuekey+"'><td>"+varname+"</td><td><span key='"+valuekey+"'></span> <span key='"+unitskey+"'></span></td></tr>";
-            $('tbody[node="'+nodename+'"]').append(out);
-        }
-        
-        $('[key="'+key+'"]').html(value);
-    }
-    
-    function history_graph(viskey)
-    {
-        var keyparts = viskey.split("/");
-        var nodename = keyparts[1]; var varname = keyparts[2];
-        
-        // end = (new Date()).getTime();
-        end = appstart;
-        start = end - 3600*1000;
-        interval = 10;
-        
-        $.ajax({
-            url: 'data/'+nodename+'/'+varname+'?start='+start+'&end='+end+'&interval='+interval,
-            dataType: 'json',
-            async: false,
-            success: function(result) { 
-                graphdata = result;
-                graphdata.push(data[viskey][0]);
-                loadedhistoric = viskey;
-                plot();
-                
+            if (data[key]==undefined) {
+                data[key] = [];
+            } else {
+                var time = parseInt((new Date()).getTime());
+                data[key].push([time,value*1]);
             }
-        });
-    }
-    
-    function plot()
-    {
-        var series = [];
-        if (loadedhistoric==viskey) series.push({data:graphdata, color:"#edc241"});
-        series.push({data:data[viskey], color:"#f1a748"});
-    
-        $.plot("#placeholder",series,options);
-    }
-    
-        
+            if (key==viskey) {
+                console.log(viskey);
+                plot();
+            }
+        }
+        var h = parseInt($('#log')[0].scrollHeight);
+        $('#log').scrollTop(h);
+    });
+
+});    
 </script>

@@ -51,8 +51,8 @@ def decode(datacode, frame):
         
 def decode_frame(node,bytedata):
 
-    if node in nodelist and 'codes' in nodelist[node]:
-        datacodes = nodelist[node]['codes']
+    if node in nodelist and 'codes' in nodelist[node]['Rx']:
+        datacodes = nodelist[node]['Rx']['codes']
         datasizes = []
         for code in datacodes:
             datasizes.append(check_datacode(code))
@@ -64,8 +64,8 @@ def decode_frame(node,bytedata):
             count = len(datacodes)
             datacode = False
     else:
-        if node in nodelist and nodelist[node]['code']:
-            datacode = nodelist[node]['code']
+        if node in nodelist and nodelist[node]['Rx']['code']:
+            datacode = nodelist[node]['Rx']['code']
         else:
             datacode = defaultdatacode
         if not datacode:
@@ -77,8 +77,8 @@ def decode_frame(node,bytedata):
             count = len(bytedata) / check_datacode(datacode)
     
     datascale = []
-    if node in nodelist and 'scale' in nodelist[node]:
-        datascale = nodelist[node]['scale']
+    if node in nodelist and 'scale' in nodelist[node]['Rx']:
+        datascale = nodelist[node]['Rx']['scale']
         
     # Decode the string of data one value at a time into "decoded"
     decoded = []

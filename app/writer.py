@@ -1,12 +1,30 @@
 import mosquitto
 import time
 from pyfina import pyfina
+from configobj import ConfigObj
 
 pyfina = pyfina("data/")
 
-# CREATE FIRST:
-# pyfina.create("EmonTxV3.PowerCT1",10)
+conffile="/home/trystan/Desktop/pi/emonview/emonview.conf"
+settings = ConfigObj(conffile, file_error=True)
 
+# itterate through node setting and create feeds if required
+for node in settings["nodes"]:
+    if "record" in settings["nodes"][node]["Rx"]:
+        nodename = settings["nodes"][node]["nodename"]
+        
+        i = 0
+        for name in settings["nodes"][node]["Rx"]["names"]:
+            record = int(settings["nodes"][node]["Rx"]["record"][i])
+            interval = int(settings["nodes"][node]["Rx"]["interval"][i])
+            
+            if record: 
+                filename = nodename+"."+name
+                print "create: "+filename+" "+str(interval)
+                pyfina.create(filename,interval)
+                
+            i += 1
+            
 def on_message(mosq, obj, msg):
     key = msg.topic
     parts = key.split("/")
@@ -14,12 +32,13 @@ def on_message(mosq, obj, msg):
     
     if len(parts)>3:
         filename = parts[1]+"."+parts[2]
-        print filename+" "+value
-        
-        
         
         pyfina.prepare(filename,time.time(),value)
-        print "Bytes written: "+str(pyfina.save())
+        
+        bytes = pyfina.save()
+        
+        if bytes:
+            print str(bytes)+" bytes written to "+filename+" "+value
 
 # Start MQTT (Mosquitto)
 mqttc = mosquitto.Mosquitto()

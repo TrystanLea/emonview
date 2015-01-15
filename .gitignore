@@ -1,1 +1,3 @@
 *.pyc
+app/data
+emonview.conf
