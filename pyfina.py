@@ -164,6 +164,8 @@ class pyfina(object):
             # Exit the loop if the position is beyond the end of the file
             if (pos > meta['npoints']-1):
                 break;
+                
+            if pos<0: pos = 0
 
             # read from the file
             fh.seek(pos*4)
