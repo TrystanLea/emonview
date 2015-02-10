@@ -18,7 +18,7 @@ pyfina = pyfina("/home/pi/data/store/")
 r = redis.Redis(host='localhost', port=6379, db=0)
 
 app = Flask(__name__)
-app.debug = True
+app.debug = False
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 mqtt_thread = None
