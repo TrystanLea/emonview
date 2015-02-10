@@ -1,4 +1,6 @@
-# EmonView
+# EmonView - v2
+
+An open source python, flask, socketio, js web application for monitoring and control
 
 The nodes interface shows all the nodes received by the rfmpi and listed in emonhub.conf:
 
@@ -15,6 +17,30 @@ The console window shows the output of emonhub.log in the browser using sockets 
 Config is an in-browser emonhub.conf editor:
 
 ![config.png](docs/config.png)
+
+## Todo
+
+Copied from v1
+
+    name? is there a better name than emonview
+    show/hide graph (graph is now on seperate window)
+    ~~zoom/pan graph~~ 
+    graph statistics
+    wh elapsed processor
+    ~~full http rest api~~ almost
+    ~~record button~~ record is integrated in emonhub config
+    ~~last updated value~~
+    ~~emonhub integration~~ almost
+    service based dispatchers listening on mqtt?
+    complete concept apps:
+        my electric
+        heating controller
+    mobile/tablet/responsive views
+
+Recently implemented
+
+    modular javascript client implementation
+    comprehensive HTTP api for nodes
 
 ## API
 
