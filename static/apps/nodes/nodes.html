@@ -1,0 +1,52 @@
+<div class="span3 nodes-nodelist">
+    <div class="block">
+        <h3>Nodes</h3>
+    </div>
+    <ul id="node-nav" class="nav nav-tabs nav-stacked"></ul>
+    <p><a href="api">API Documentation</a></p>
+
+</div>
+
+<div class="span8 nodes-rightpane">   
+    <div id="template-node" style="display:none"> 
+        
+
+        <h3><span class="node-key">undefined</span></h3>
+        
+        <p><b>Node id:</b> <span class="node-id"></span></p>
+        <p><b>Node key:</b> <span class="node-key">undefined</span></p>
+        <p><b>Node hardware:</b> <span class="node-hardware">undefined</span></p>
+        <p><b>Node firmware:</b> <span class="node-firmware">undefined</span></p>
+        <br>
+        <h4>Variables</h4>
+           
+        <table class="table table-striped">
+            
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Last updated</th>
+                <th>Value</th>
+                <th>Record (interval)</th>
+            </tr>
+            
+            <tr id="template-variable" style="display:none">
+                <td key="variable-id"></td>
+                <td key="variable-name"></td>
+                <td key="variable-time"></td>
+                <td>
+                    <span key="variable-value"></span>
+                    <span key="variable-unit"></span>
+                </td>
+                <td><a key="view" style="display:none">Recording @<span class="interval"></span></a></td>
+            </tr>
+            
+            <tbody class="variables"></tbody>
+        
+        </table>
+    </div>
+    
+    <div class="block">
+        <div id="node-content"></div>
+    </div>
+</div>

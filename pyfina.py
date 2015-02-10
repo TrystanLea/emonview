@@ -62,7 +62,7 @@ class pyfina(object):
             #     'start_time': math.floor(timestamp / interval) * interval
             # }
             # self.create_meta(filename,meta)
-
+            
         meta['npoints'] = self.get_npoints(filename)
         
         #Calculate interval that this datapoint belongs too
@@ -121,26 +121,13 @@ class pyfina(object):
         outinterval = int(outinterval)
         
         meta = self.get_meta(filename)
-        
         if not meta:
             return False
         meta['npoints'] = self.get_npoints(filename)    
             
+            
         if outinterval<meta['interval']:
             outinterval = meta['interval']
-            
-        if start>end:
-            return False
-        
-        # print start
-        
-        # print meta['start_time']
-        
-        if start<meta['start_time']:
-            start = math.ceil(meta['start_time'] / outinterval) * outinterval
-            
-        # print start    
-            
             
         dp = int(math.ceil((end-start)/outinterval))
         end = start + (dp*outinterval)
@@ -159,8 +146,12 @@ class pyfina(object):
             skipsize = 1
         
         # Calculate the starting datapoint position in the timestore file
-        startpos = math.ceil((start - meta['start_time']) / meta['interval'])
-        
+        if start>meta['start_time']:
+            startpos = math.ceil((start - meta['start_time']) / meta['interval'])
+        else:
+            start = math.ceil(meta['start_time'] / outinterval) * outinterval
+            startpos = math.ceil((start - meta['start_time']) / meta['interval'])
+         
         data = []
         timestamp = 0
         i = 0
