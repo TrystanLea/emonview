@@ -1,5 +1,21 @@
 # EmonView
 
+The nodes interface shows all the nodes received by the rfmpi and listed in emonhub.conf:
+
+![nodes.png](docs/nodes.png)
+
+If a node:variable is being recorded it can be viewed on a graph:
+
+![graph.png](docs/graph.png)
+
+The console window shows the output of emonhub.log in the browser using sockets for live scrolling.
+
+![console.png](docs/console.png)
+
+Config is an in-browser emonhub.conf editor:
+
+![config.png](docs/config.png)
+
 ## Install
 
 Installation guide for the raspberrypi:
