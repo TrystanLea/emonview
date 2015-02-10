@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import mosquitto
 import time
 from configobj import ConfigObj

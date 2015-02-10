@@ -42,6 +42,10 @@ The main disadvantage of removing input processing and the closely tied rfm12/69
 
 EmonView aims to implement a more complete HTTP API making full and correct use of request methods GET, POST, PUT, DELETE and mime types, see api docs below for the initial implementation.
 
+**Modular javascript client application**
+
+Rather than use php server side templating emonview serves an inital html/js client page whih then loads html/js apps/pages from the server as required.
+
 ## Todo
 
 Copied from v1
