@@ -32,6 +32,7 @@ def on_message(mosq, obj, msg):
             
                 # for each variable in mqtt packet
                 for vid in range(len(values)):
+                    pyfina.padding_mode = "null"
                 
                     # check if there is record entry
                     if len(config[nodeid]["record"])>vid:
@@ -46,9 +47,8 @@ def on_message(mosq, obj, msg):
                             feedname = str(nodeid)+"_"+str(vid)
                             
                             # ACCUMULATOR
-                            pyfina.padding_mode = "null"
                             if "accumulate" in config[nodeid]:
-                                if config[nodeid]["accumulate"][vid]:
+                                if config[nodeid]["accumulate"][vid] is "1":
                                     key = "accumulator:"+str(nodeid)+":"+str(vid)
                                     total = pyfina.lastvalue(feedname)
                                     diff = 0
@@ -59,7 +59,7 @@ def on_message(mosq, obj, msg):
                                     r.set(key, value)
                                     value = total + diff
                                     pyfina.padding_mode = "join"
-                                
+                                    
                             print "-- queue for write "+feedname+" "+str(value)
                             
                             if not pyfina.prepare(feedname,now,value):
