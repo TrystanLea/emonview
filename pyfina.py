@@ -11,6 +11,9 @@ import struct, math, os
 
 class pyfina(object):
 
+
+    padding_mode = "null"
+
     # Data directory of pyfina files
     datadir = ""
     
@@ -19,6 +22,9 @@ class pyfina(object):
     
     # Buffer timeseries data
     buffers = {}
+    
+    # Last value tmp store
+    lastvalue_cache = {}
     
     def __init__(self,datadir):
         self.buffers = {}
@@ -89,10 +95,19 @@ class pyfina(object):
                 self.buffers[filename] = ""
 
             if npadding>0:
+                padding_value = 'nan'
+                
+                if self.padding_mode=="join":
+                    last_val = self.lastvalue(filename)
+                    div = (value - last_val) / (npadding+1)
+                    padding_value = last_val
+                     
                 for n in range(npadding):
-                    self.buffers[filename] += struct.pack("f",float('nan'))
+                    if self.padding_mode=="join": padding_value += div
+                    self.buffers[filename] += struct.pack("f",float(padding_value))
             
             self.buffers[filename] += struct.pack("f",float(value))
+            self.lastvalue_cache[filename] = value
 
         return value
     
@@ -181,7 +196,27 @@ class pyfina(object):
             i += 1
         
         return data
+
+    def lastvalue(self,filename):
+        # If meta data file does not exist then exit
+        meta = self.get_meta(filename)
+        if not meta: return False
         
+        meta['npoints'] = self.get_npoints(filename)
+        
+        if filename in self.lastvalue_cache:
+            return self.lastvalue_cache[filename]
+        
+        size = os.stat(self.datadir+filename+".dat").st_size
+        
+        if size>=4:
+            fh = open(self.datadir+filename+".dat","rb")
+            fh.seek(size-4)
+            val = struct.unpack("f",fh.read(4))
+            self.lastvalue_cache[filename] = val[0]
+            return val[0]
+        
+        return False        
         
     def pipe(self,filename):
     

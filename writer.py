@@ -2,6 +2,7 @@
 
 import mosquitto
 import time
+import redis
 from configobj import ConfigObj
 from pyfina import pyfina
 
@@ -9,6 +10,8 @@ settings = ConfigObj("/home/pi/emonview/emonhub.conf", file_error=True)
 config = settings["nodes"]
 
 pyfina = pyfina("/home/pi/data/store/")
+
+r = redis.Redis(host='localhost', port=6379, db=0)
 
 start = time.time()
 
@@ -39,9 +42,24 @@ def on_message(mosq, obj, msg):
                         if interval>0:
                         
                             # RECORD
-                            value = values[vid]
+                            value = float(values[vid])
                             feedname = str(nodeid)+"_"+str(vid)
                             
+                            # ACCUMULATOR
+                            pyfina.padding_mode = "null"
+                            if "accumulate" in config[nodeid]:
+                                if config[nodeid]["accumulate"][vid]:
+                                    key = "accumulator:"+str(nodeid)+":"+str(vid)
+                                    total = pyfina.lastvalue(feedname)
+                                    diff = 0
+                                    if r.exists(key):
+                                        lastval = float(r.get(key))
+                                        diff = value - lastval
+                                        if diff<0: diff = 0
+                                    r.set(key, value)
+                                    value = total + diff
+                                    pyfina.padding_mode = "join"
+                                
                             print "-- queue for write "+feedname+" "+str(value)
                             
                             if not pyfina.prepare(feedname,now,value):
