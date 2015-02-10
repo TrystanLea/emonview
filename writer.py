@@ -5,7 +5,7 @@ import time
 from configobj import ConfigObj
 from pyfina import pyfina
 
-settings = ConfigObj("emonhub.conf", file_error=True)
+settings = ConfigObj("/home/pi/emonview/emonhub.conf", file_error=True)
 config = settings["nodes"]
 
 pyfina = pyfina("/home/pi/data/store/")
@@ -64,7 +64,7 @@ if __name__ == '__main__':
         # reload config
         if (time.time()-lasttime)>5.0:
             lasttime = time.time()
-            settings = ConfigObj("emonhub.conf", file_error=True)
+            settings = ConfigObj("/home/pi/emonview/emonhub.conf", file_error=True)
             config = settings["nodes"]
         
         # Every 60s write data to disk

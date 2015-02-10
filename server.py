@@ -23,7 +23,7 @@ app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 mqtt_thread = None
 
-conffile="emonhub.conf"
+conffile="/home/pi/emonview/emonhub.conf"
 
 @app.route('/')
 def index():
@@ -31,13 +31,13 @@ def index():
     
 @app.route('/client')
 def client():
-    with open("client.html", 'rb') as f:
+    with open("/home/pi/emonview/client.html", 'rb') as f:
         content = f.read()
     return content
     
 @app.route('/test')
 def test():
-    with open("test.html", 'rb') as f:
+    with open("/home/pi/emonview/test.html", 'rb') as f:
         content = f.read()
     return content
     
@@ -48,7 +48,7 @@ def test():
 @app.route('/api/<path:path>',methods = ['POST','GET'])
 def api(path):
 
-    settings = ConfigObj("emonhub.conf", file_error=True)
+    settings = ConfigObj(conffile, file_error=True)
     config = settings["nodes"]
     
     nodes = r.get("nodes")
@@ -106,7 +106,7 @@ def api(path):
                # for varid in values:
                     # store(nodeid,varid,time,values[i])
             else:
-                settings = ConfigObj("emonhub.conf", file_error=True)
+                settings = ConfigObj(conffile, file_error=True)
                 config = settings["nodes"]
                 
                 if config is None: config = {}
@@ -122,7 +122,7 @@ def api(path):
                 result = config
         
         if nodeid is not False and varid is not False and prop is not False:
-            settings = ConfigObj("emonhub.conf", file_error=True)
+            settings = ConfigObj(conffile, file_error=True)
             config = settings["nodes"]
         
             if config is None: config = {}
