@@ -26,17 +26,21 @@ EmonView initially aims to replace the buffered write version of emoncms on the 
 In the existing emonhub + emoncms installation configuration settings of nodes are partly placed in emonhub.conf and partly in the input and feeds mysql tables in emoncms. EmonView simplifies by using emonhub.conf to take the role of the persistent 'database' that mysql was being used for. Redis (in memory with persistence turned off) is then used for the properties that change regularly such as node variable values and time to ensure we minimize writes to disk.
 
 **Removal of input processing**
-EmonView explores doing away with the separation of inputs and feeds, instead we only have nodes and node variables, which can be place holders only or can be recorded if historic data is needed.
+EmonView explores doing away with the separation of inputs and feeds which has been one of emoncms's main features, instead we only have nodes and node variables, which can be place holders only or can be recorded if historic data is needed.
 
 Input processing was originally developed for doing the processing required to create kWh/d feeds. But with a shift towards calculating total watt hour accumulated on the monitoring hardware and just recording ever increasing cumulative watt hour feeds and calculating kwh/d from these feeds as a post process the power_to_kwh/d processor is no longer needed.
 
 Scale by a value has been another often used input processor but we can move this step to the emonhub decoder which also improves and brings emonhub closer to its goal of a universal bridge between many different services.
 
-Rather then have the hassle of having to setup inputs, input processing and feeds, and the complication of two tables with the same input and feed names etc, the node:variable only approach explored here merges them together providing just one UI where you can access historic data if recorded or just view the node:variable last values if not recorded.
+Rather then having to setup inputs, input processing and feeds, and the complication of two tables with the same input and feed names etc, the node:variable only approach explored here merges them together providing just one UI where you can access historic data if recorded or just view the node:variable last values if not recorded.
 
-For other input processors like the histogram or average process it would be better to move these to post-processing both from a usability and from a disk write perspective. With a well implemented post processing module histograms could be generated as part of a batch process initiated by the user after the data its based on is recorded. This would allow for changing the histogram resolution and recalculating. A post process is also much more disk write efficient as it can read through the input data and write the histogram data in large blocks instead of millions of individual writes.
+For other input processors like the histogram or average process it would be better to move these to post-processing both from a usability and from a disk write perspective, integrating the learning [write load investigation](https://github.com/openenergymonitor/documentation/blob/master/BuildingBlocks/TimeSeries/writeloadinvestigation.md) With a well implemented post processing module histograms could be generated as part of a batch process initiated by the user after the input data its based on is recorded. This would allow for changing the histogram resolution and recalculating. A post process is also much more disk write efficient as it can read through the input data and write the histogram data in large blocks instead of millions of individual writes.
 
 The main disadvantage of removing input processing and the closely tied rfm12/69 node:var concept is that it does not allow for adding and subtracting inputs. A lot of the subtracting and adding could still be done in post processing but there may be situations cases that this approach cant cater for.
+
+**API**
+
+EmonView aims to implement a more complete HTTP API making full and correct use of request methods GET, POST, PUT, DELETE and mime types, see api docs below for the initial implementation.
 
 ## Todo
 
