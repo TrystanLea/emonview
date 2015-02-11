@@ -180,18 +180,17 @@ class pyfina(object):
             if (pos > meta['npoints']-1):
                 break;
                 
-            if pos<0: pos = 0
+            if pos>=0:
+                # read from the file
+                fh.seek(pos*4)
+                val = struct.unpack("f",fh.read(4))
 
-            # read from the file
-            fh.seek(pos*4)
-            val = struct.unpack("f",fh.read(4))
+                # calculate the datapoint time
+                timestamp = int(meta['start_time'] + pos * meta['interval'])
 
-            # calculate the datapoint time
-            timestamp = int(meta['start_time'] + pos * meta['interval'])
-
-            # add to the data array if its not a nan value
-            if not math.isnan(val[0]):
-                data.append([timestamp*1000,val[0]])
+                # add to the data array if its not a nan value
+                if not math.isnan(val[0]):
+                    data.append([timestamp*1000,val[0]])
 
             i += 1
         
