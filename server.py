@@ -9,7 +9,7 @@ from threading import Thread
 from configobj import ConfigObj
 from gevent import monkey
 monkey.patch_all()
-from flask import Flask, Response, request, redirect, url_for
+from flask import Flask, Response, request, redirect, url_for, session
 from flask.ext.socketio import SocketIO, emit
 
 from pyfina import pyfina
@@ -18,26 +18,50 @@ pyfina = pyfina("/home/pi/data/store/")
 r = redis.Redis(host='localhost', port=6379, db=0)
 
 app = Flask(__name__)
-app.debug = False
+app.debug = True
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 mqtt_thread = None
 
-conffile="/home/pi/emonview/emonhub.conf"
+basedir = "/home/pi/emonview/"
+conffile = basedir+"emonhub.conf"
 
 @app.route('/')
 def index():
-    return redirect(url_for('client'))
+    session['valid'] = session.get('valid',0)
+    if session['valid']:
+        return redirect(url_for('client'))
+    else:
+        with open(basedir+"login.html", 'rb') as f:
+            content = f.read()
+        return content
+        
+@app.route('/login',methods = ['POST','GET'])
+def login():
+    settings = ConfigObj(conffile, file_error=True)
+    if request.form['username']==settings['auth']['username'] and request.form['password']==settings['auth']['password']:
+        session['valid'] = session.get('valid',0)
+        session['valid'] = True
+    return redirect("/")
+    
+@app.route('/logout',methods = ['POST','GET'])
+def logout():
+    session.clear()
+    return redirect("/")
     
 @app.route('/client')
 def client():
-    with open("/home/pi/emonview/client.html", 'rb') as f:
+    if not session['valid']:
+        return redirect("/")
+    with open(basedir+"client.html", 'rb') as f:
         content = f.read()
     return content
     
 @app.route('/test')
 def test():
-    with open("/home/pi/emonview/test.html", 'rb') as f:
+    if not session['valid']:
+        return redirect("/")
+    with open(basedir+"test.html", 'rb') as f:
         content = f.read()
     return content
     
@@ -47,7 +71,8 @@ def test():
 @app.route('/api',defaults={'path': ''},methods = ['POST','GET'])    
 @app.route('/api/<path:path>',methods = ['POST','GET'])
 def api(path):
-
+    if not session['valid']:
+        return redirect("/")
     settings = ConfigObj(conffile, file_error=True)
     config = settings["nodes"]
     
@@ -205,8 +230,8 @@ def api(path):
 
 @app.route('/conf',methods = ['POST','GET'])
 def conf():
-    # if not session['valid']:
-    #    redirect("/")
+    if not session['valid']:
+        return redirect("/")
         
     if request.method == 'POST':
         # might be good to do some input checking/sanitization here!
