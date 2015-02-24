@@ -91,10 +91,7 @@ Optional for firmware upload support:
     
 Python items:
 
-    sudo pip install Flask
-    sudo pip install Flask-SocketIO
-    sudo pip install mosquitto
-    sudo pip install redis
+    sudo pip install Flask Flask-SocketIO mosquitto redis
 
 Installation of Flask-SocketIO can be slow on a raspberrypi.
 
